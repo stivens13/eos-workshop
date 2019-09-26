@@ -51,6 +51,8 @@ curl http://localhost:8888/v1/chain/get_info
 
 # Wallet 
 
+## Set up
+
 `cleos wallet list`
 
 `cleos wallet create --to-console`
@@ -68,3 +70,53 @@ curl http://localhost:8888/v1/chain/get_info
 `cleos wallet import`
 
 `eosio` dev master key `5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3`
+
+## Create Test Accounts
+
+```
+cleos create account eosio bob EOS5CgziDQ9Lqa9USmeP1kV8zK76CZKCaER6F375dRYb6b5smWSBT 
+cleos create account eosio alice EOS5CgziDQ9Lqa9USmeP1kV8zK76CZKCaER6F375dRYb6b5smWSBT
+```
+
+`cleos get account alice`
+
+# Submit Smart Contracts to the Blockchain
+
+## Compile your .cpp file
+
+`eosio-cpp hello.cpp -o hello.wasm`
+
+## Create Smart Contract account interface
+
+Choose a public key from
+`cleos wallet keys`
+
+And then use it to create an interface account
+`cleos create account eosio hello {PUBLIC_KEY} -p eosio@active`
+
+`cleos set contract hello CONTRACT_ABSOLUTE_PATH -p hello@active`
+
+## Interact with it
+
+`
+cleos push action hello hi '["bob"]' -p bob@active
+cleos push action hello hi '["bob"]' -p alice@active
+`
+
+## Change it
+
+Add another line to hi() 
+`
+void hi( name user ) {
+   require_auth( user );
+   print( "Hello, ", name{user} );
+}
+`
+Recompile 
+`eosio-cpp -abigen -o hello.wasm hello.cpp
+`
+Submit to network
+`cleos set contract hello CONTRACTS_DIR/hello -p hello@active`
+
+Try again 
+`cleos push action hello hi '["bob"]' -p alice@active`
