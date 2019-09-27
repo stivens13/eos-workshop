@@ -98,23 +98,22 @@ And then use it to create an interface account
 
 ## Interact with it
 
-`
+```
 cleos push action hello hi '["bob"]' -p bob@active
 cleos push action hello hi '["bob"]' -p alice@active
-`
+```
 
 ## Change it
 
 Add another line to hi() 
-`
+```
 void hi( name user ) {
    require_auth( user );
    print( "Hello, ", name{user} );
 }
-`
+```
 Recompile 
-`eosio-cpp -abigen -o hello.wasm hello.cpp
-`
+`eosio-cpp -abigen -o hello.wasm hello.cpp`
 Submit to network
 `cleos set contract hello CONTRACTS_DIR/hello -p hello@active`
 
