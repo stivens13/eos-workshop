@@ -113,9 +113,13 @@ void hi( name user ) {
 }
 ```
 Recompile 
+
 `eosio-cpp -abigen -o hello.wasm hello.cpp`
+
 Submit to network
+
 `cleos set contract hello CONTRACTS_DIR/hello -p hello@active`
 
 Try again 
+
 `cleos push action hello hi '["bob"]' -p alice@active`
